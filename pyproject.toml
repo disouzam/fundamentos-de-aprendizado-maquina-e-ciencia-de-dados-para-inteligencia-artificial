@@ -1,0 +1,7 @@
+[project]
+name = "fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial"
+version = "0.1.0"
+description = "Atividades do curso de Aprendizado de Máquina e Ciência de Dados para a Inteligência Artificial"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
