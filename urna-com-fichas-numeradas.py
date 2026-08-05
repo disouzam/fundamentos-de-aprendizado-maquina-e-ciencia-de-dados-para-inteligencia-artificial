@@ -56,17 +56,47 @@ def _():
         20,
     ]
 
-    sucess_frequency = 0 # Número de ocorrências do número > 9
+    sucess_frequency = 0  # Número de ocorrências do número > 9
 
     simulation_number = 10000000
 
-    for n in range (0,simulation_number):
+    rnd.seed(42)  # Para reproducibilidade
+
+    for n in range(0, simulation_number):
         picked_number = rnd.choice(ballot_box)
         if picked_number > 9:
             sucess_frequency += 1
 
+    print("Frequência =", sucess_frequency / simulation_number)
+    return (rnd,)
 
-    print('Frequência =', sucess_frequency / simulation_number)
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Inicialização mais compacta da lista
+    """)
+    return
+
+
+@app.cell
+def _(rnd):
+    number_of_balls_2 = 20  # Fichas / bolas na urna
+
+    ballot_box_2 = list(range(1, 21, 1))
+
+    sucess_frequency_2 = 0  # Número de ocorrências do número > 9
+
+    simulation_number_2 = 10
+
+    rnd.seed(42)  # Para reproducibilidade
+
+    for n_2 in range(0, simulation_number_2):
+        picked_number_2 = rnd.choice(ballot_box_2)
+        if picked_number_2 > 9:
+            sucess_frequency_2 += 1
+
+    print("Frequência =", sucess_frequency_2 / simulation_number_2)
     return
 
 
