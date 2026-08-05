@@ -13,3 +13,8 @@ dependencies = [
 
 [tool.uv]
 exclude-newer = "30 days"
+
+[dependency-groups]
+dev = [
+    "prek>=0.4.8",
+]
