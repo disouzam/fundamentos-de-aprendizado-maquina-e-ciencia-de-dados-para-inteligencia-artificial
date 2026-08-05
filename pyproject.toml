@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "marimo>=0.23.13",
+    "ruff>=0.15.20",
 ]
 
 [tool.uv]
