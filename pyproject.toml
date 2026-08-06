@@ -6,7 +6,15 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "marimo>=0.23.13",
+    "matplotlib>=3.11.0",
+    "matplotlib-venn>=1.1.2",
+    "ruff>=0.15.20",
 ]
 
 [tool.uv]
 exclude-newer = "30 days"
+
+[dependency-groups]
+dev = [
+    "prek>=0.4.8",
+]
