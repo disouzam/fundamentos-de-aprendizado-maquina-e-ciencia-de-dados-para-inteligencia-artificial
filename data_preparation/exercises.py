@@ -8,8 +8,9 @@ app = marimo.App(width="medium")
 def _():
     import marimo as mo
     import pandas as pd
+    import numpy as np
 
-    return mo, pd
+    return mo, np, pd
 
 
 @app.cell(hide_code=True)
@@ -206,6 +207,193 @@ def _(cleaned_iris_dataset, cleaned_shape, mo):
         _md_text += f"\nHouve uma redução de **{_percent_reduction:.2f}%** no número de colunas com a eliminação de **{_col_change} ** colunas duplicadas.\n"
 
     mo.md(_md_text)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Tratamento de valores faltantes
+
+    ## _Alternativas para cenários complexos_
+
+    Valores faltantes podem aparecer como:
+
+    - ?
+    - -
+    - NA
+    - None
+
+    além do clássico caso de **NaN** tratado acima
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Nova leitura do dataset iris
+    """)
+    return
+
+
+@app.cell
+def _(pd):
+    iris_dataset_2 = pd.read_csv("data/iris-with-errors.csv", header=0)
+    iris_dataset_2
+    return (iris_dataset_2,)
+
+
+@app.cell
+def _(iris_dataset_2, np):
+    iris_dataset_2_cleaned = iris_dataset_2.replace("?", np.nan)
+
+    print("Valores ausentes por coluna após substituir '?':")
+    print(iris_dataset_2_cleaned.isna().sum())
+
+    iris_dataset_2_cleaned.head(25)
+    return (iris_dataset_2_cleaned,)
+
+
+@app.cell
+def _(iris_dataset_2_cleaned):
+    iris_dataset_2_after_drops = iris_dataset_2_cleaned.dropna().drop_duplicates()
+
+    print("Dimensão original:", iris_dataset_2_cleaned.shape)
+    print("Dimensão após limpeza:", iris_dataset_2_after_drops.shape)
+
+    iris_dataset_2_after_drops.head(25)
+    return (iris_dataset_2_after_drops,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Remoção de linhas e colunas específicas
+    """)
+    return
+
+
+@app.cell
+def _(iris_dataset_2_after_drops):
+    iris_dataset_3 = iris_dataset_2_after_drops.copy()
+
+    print("Atributos atuais:", list(iris_dataset_3.columns))
+    print("Colunas que serão removidas:", list(iris_dataset_3.columns[[1, 3]]))
+
+    iris_dataset_3 = iris_dataset_3.drop(iris_dataset_3.columns[[1, 3]], axis=1)
+    iris_dataset_3.head(25)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Remoção de linhas
+    """)
+    return
+
+
+@app.cell
+def _(iris_dataset_2_after_drops):
+    iris_dataset_2_after_drop_rows = iris_dataset_2_after_drops.copy()
+
+    removed_index = iris_dataset_2_after_drop_rows.index[[0, 2, 5]]
+    print("Índices que serão removidos:", list(removed_index))
+
+    iris_dataset_2_after_drop_rows = iris_dataset_2_after_drop_rows.drop(
+        removed_index, axis=0
+    )
+    iris_dataset_2_after_drop_rows.head(25)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Substituição de valores ausentes
+    """)
+    return
+
+
+@app.cell
+def _(np, pd):
+    iris_dataset_4 = pd.read_csv("data/iris-with-errors.csv", header=0)
+    iris_dataset_4 = iris_dataset_4.replace("?", np.nan)
+
+    print("Dimensão da base:", iris_dataset_4.shape)
+    iris_dataset_4.head(25)
+    return (iris_dataset_4,)
+
+
+@app.cell
+def _(iris_dataset_4, np):
+    array = np.array(iris_dataset_4[iris_dataset_4.columns[:-1]], dtype=float)
+    array
+    return (array,)
+
+
+@app.cell
+def _(array, np):
+    column_means = np.nanmean(array, axis=0)
+    column_means
+    return (column_means,)
+
+
+@app.cell
+def _(array, column_means, np):
+    filled_array = array.copy()
+
+    for _row in range(filled_array.shape[0]):
+        for _col in range(filled_array.shape[1]):
+            if np.isnan(filled_array[_row, _col]):
+                filled_array[_row, _col] = column_means[_col]
+
+    print("Matriz após a substituição dos valores ausentes por médias das colunas:")
+    print(filled_array)
+    return (filled_array,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Reconstrução do dataframe a partir do array multidimensional preenchido:
+    """)
+    return
+
+
+@app.cell
+def _(filled_array, iris_dataset_4, pd):
+    iris_dataset_5 = pd.DataFrame(
+        filled_array, columns=list(iris_dataset_4.columns[:-1])
+    )
+    iris_dataset_5
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Substituição usando a função `fillna()`:
+    """)
+    return
+
+
+@app.cell
+def _(np, pd):
+    iris_dataset_6 = pd.read_csv("data/iris-with-errors.csv", header=0)
+    iris_dataset_6 = iris_dataset_6.replace("?", np.nan)
+
+    _columns = iris_dataset_6.columns[:-1]
+
+    iris_dataset_6[_columns] = iris_dataset_6[_columns].astype(float)
+
+    iris_dataset_7 = iris_dataset_6.copy()
+    iris_dataset_7[_columns] = iris_dataset_7[_columns].fillna(
+        iris_dataset_7[_columns].mean()
+    )
+
+    iris_dataset_7
     return
 
 
