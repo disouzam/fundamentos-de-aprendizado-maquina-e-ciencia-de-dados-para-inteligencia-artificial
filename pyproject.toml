@@ -10,6 +10,7 @@ dependencies = [
     "matplotlib-venn>=1.1.2",
     "pandas>=3.0.3",
     "ruff>=0.15.20",
+    "scikit-learn>=1.9.0",
 ]
 
 [tool.uv]
