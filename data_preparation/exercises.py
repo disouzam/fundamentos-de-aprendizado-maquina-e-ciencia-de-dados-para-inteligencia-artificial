@@ -500,28 +500,47 @@ def _(
     full_iris_dataset,
     full_iris_dataset_numeric_columns,
     normalized_columns,
+    np,
     plt,
     standardized_columns,
 ):
     for coluna in range(full_iris_dataset_numeric_columns.shape[1]):
         nome_coluna = full_iris_dataset.columns[coluna]
+        cor_coluna = np.random.rand(
+            3,
+        )
 
         plt.figure(figsize=(6, 3))
-        plt.hist(full_iris_dataset_numeric_columns[:, coluna], bins=15, alpha=0.8)
+        plt.hist(
+            full_iris_dataset_numeric_columns[:, coluna],
+            bins=15,
+            alpha=0.8,
+            color=cor_coluna,
+        )
         plt.title(f"Dados originais — {nome_coluna}")
         plt.xlabel(nome_coluna)
         plt.ylabel("Frequência")
         plt.show()
 
         plt.figure(figsize=(6, 3))
-        plt.hist(normalized_columns[:, coluna], bins=15, alpha=0.8)
+        plt.hist(
+            normalized_columns[:, coluna],
+            bins=15,
+            alpha=0.8,
+            color=cor_coluna,
+        )
         plt.title(f"Dados normalizados — {nome_coluna}")
         plt.xlabel(nome_coluna)
         plt.ylabel("Frequência")
         plt.show()
 
         plt.figure(figsize=(6, 3))
-        plt.hist(standardized_columns[:, coluna], bins=15, alpha=0.8)
+        plt.hist(
+            standardized_columns[:, coluna],
+            bins=15,
+            alpha=0.8,
+            color=cor_coluna,
+        )
         plt.title(f"Dados padronizados — {nome_coluna}")
         plt.xlabel(nome_coluna)
         plt.ylabel("Frequência")
