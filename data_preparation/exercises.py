@@ -9,8 +9,9 @@ def _():
     import marimo as mo
     import pandas as pd
     import numpy as np
+    from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
-    return mo, np, pd
+    return MinMaxScaler, StandardScaler, mo, np, pd
 
 
 @app.cell(hide_code=True)
@@ -394,6 +395,94 @@ def _(np, pd):
     )
 
     iris_dataset_7
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Normalização e padronização
+    """)
+    return
+
+
+@app.cell
+def _(pd):
+    full_iris_dataset = pd.read_csv("data/iris.csv", header=0)
+
+    print("Número de linhas e colunas:", full_iris_dataset.shape)
+    full_iris_dataset.head()
+    return (full_iris_dataset,)
+
+
+@app.cell
+def _(full_iris_dataset, np):
+    full_iris_dataset_numeric_columns = np.array(
+        full_iris_dataset[full_iris_dataset.columns[:-1]], dtype=float
+    )
+    categoric_column = full_iris_dataset[full_iris_dataset.columns[-1]]
+
+    print("Dimensão da matriz de atributos:", full_iris_dataset_numeric_columns.shape)
+    print("Classes:", np.unique(categoric_column))
+    return (full_iris_dataset_numeric_columns,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Normalização
+    """)
+    return
+
+
+@app.cell
+def _(MinMaxScaler, full_iris_dataset_numeric_columns):
+    for i in range(full_iris_dataset_numeric_columns.shape[1]):
+        print(
+            f"Coluna {i}: mínimo = {full_iris_dataset_numeric_columns[:, i].min():.2f}, máximo = {full_iris_dataset_numeric_columns[:, i].max():.2f}"
+        )
+
+    scaler_minmax = MinMaxScaler(feature_range=(0, 1))
+    normalized_columns = scaler_minmax.fit_transform(full_iris_dataset_numeric_columns)
+
+    print("\nDados normalizados:")
+    print(normalized_columns[:10])
+    print()
+
+    for i in range(normalized_columns.shape[1]):
+        print(
+            f"Coluna {i}: mínimo = {normalized_columns[:, i].min():.2f}, máximo = {normalized_columns[:, i].max():.2f}"
+        )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Padronização
+    """)
+    return
+
+
+@app.cell
+def _(StandardScaler, full_iris_dataset_numeric_columns):
+    scaler_standard = StandardScaler()
+    standardized_columns = scaler_standard.fit_transform(
+        full_iris_dataset_numeric_columns
+    )
+
+    print("Dados padronizados:")
+    print(standardized_columns[:10])
+    return (standardized_columns,)
+
+
+@app.cell
+def _(np, standardized_columns):
+    for _i in range(standardized_columns.shape[1]):
+        print(f"Coluna {_i}: média = {np.mean(standardized_columns[:, _i]):.4f}")
+        print(
+            f"Coluna {_i}: desvio padrão = {np.std(standardized_columns[:, _i]):.4f}\n"
+        )
     return
 
 
