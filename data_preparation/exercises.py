@@ -11,8 +11,9 @@ def _():
     import numpy as np
     from sklearn.preprocessing import MinMaxScaler, StandardScaler
     import matplotlib.pyplot as plt
+    from sklearn.preprocessing import Binarizer
 
-    return MinMaxScaler, StandardScaler, mo, np, pd, plt
+    return Binarizer, MinMaxScaler, StandardScaler, mo, np, pd, plt
 
 
 @app.cell(hide_code=True)
@@ -545,6 +546,33 @@ def _(
         plt.xlabel(nome_coluna)
         plt.ylabel("Frequência")
         plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Binarização
+    """)
+    return
+
+
+@app.cell
+def _(Binarizer, MinMaxScaler, full_iris_dataset_numeric_columns):
+    T = 0.1
+    print("Limiar:", T)
+    print("---------------------")
+
+    normalizer = MinMaxScaler(feature_range=(0, 1))
+    normalized_array = normalizer.fit_transform(full_iris_dataset_numeric_columns)
+
+    binarizer = Binarizer(threshold=T)
+    binarized_array = binarizer.fit_transform(normalized_array)
+
+    for _i in range(10):
+        print("Antes:", normalized_array[_i])
+        print("Depois:", binarized_array[_i])
+        print("---------------------")
     return
 
 
