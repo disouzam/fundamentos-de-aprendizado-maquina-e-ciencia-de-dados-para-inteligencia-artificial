@@ -10,8 +10,9 @@ def _():
     import pandas as pd
     import numpy as np
     from sklearn.preprocessing import MinMaxScaler, StandardScaler
+    import matplotlib.pyplot as plt
 
-    return MinMaxScaler, StandardScaler, mo, np, pd
+    return MinMaxScaler, StandardScaler, mo, np, pd, plt
 
 
 @app.cell(hide_code=True)
@@ -453,7 +454,7 @@ def _(MinMaxScaler, full_iris_dataset_numeric_columns):
         print(
             f"Coluna {i}: mínimo = {normalized_columns[:, i].min():.2f}, máximo = {normalized_columns[:, i].max():.2f}"
         )
-    return
+    return (normalized_columns,)
 
 
 @app.cell(hide_code=True)
@@ -483,6 +484,48 @@ def _(np, standardized_columns):
         print(
             f"Coluna {_i}: desvio padrão = {np.std(standardized_columns[:, _i]):.4f}\n"
         )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Comparação visual
+    """)
+    return
+
+
+@app.cell
+def _(
+    full_iris_dataset,
+    full_iris_dataset_numeric_columns,
+    normalized_columns,
+    plt,
+    standardized_columns,
+):
+    for coluna in range(full_iris_dataset_numeric_columns.shape[1]):
+        nome_coluna = full_iris_dataset.columns[coluna]
+
+        plt.figure(figsize=(6, 3))
+        plt.hist(full_iris_dataset_numeric_columns[:, coluna], bins=15, alpha=0.8)
+        plt.title(f"Dados originais — {nome_coluna}")
+        plt.xlabel(nome_coluna)
+        plt.ylabel("Frequência")
+        plt.show()
+
+        plt.figure(figsize=(6, 3))
+        plt.hist(normalized_columns[:, coluna], bins=15, alpha=0.8)
+        plt.title(f"Dados normalizados — {nome_coluna}")
+        plt.xlabel(nome_coluna)
+        plt.ylabel("Frequência")
+        plt.show()
+
+        plt.figure(figsize=(6, 3))
+        plt.hist(standardized_columns[:, coluna], bins=15, alpha=0.8)
+        plt.title(f"Dados padronizados — {nome_coluna}")
+        plt.xlabel(nome_coluna)
+        plt.ylabel("Frequência")
+        plt.show()
     return
 
 
