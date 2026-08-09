@@ -45,10 +45,8 @@ def _(mo):
 
 
 @app.cell
-def _(iris_with_errors_url, pd):
-    iris_dataset = pd.read_csv(iris_with_errors_url, header=0)
-    n_row_iris, n_col_iris = iris_dataset.shape
-    print(f"Númber of rows: {n_row_iris} \nNumber of columns: {n_col_iris}")
+def _(iris_with_errors_url, read_csv_with_diagnostics):
+    iris_dataset = read_csv_with_diagnostics(iris_with_errors_url)
     return (iris_dataset,)
 
 
@@ -261,10 +259,15 @@ def _(mo):
 
 
 @app.cell
-def _(iris_with_errors_url, pd):
-    iris_dataset_2 = pd.read_csv(iris_with_errors_url, header=0)
-    iris_dataset_2
+def _(iris_with_errors_url, read_csv_with_diagnostics):
+    iris_dataset_2 = read_csv_with_diagnostics(iris_with_errors_url)
     return (iris_dataset_2,)
+
+
+@app.cell
+def _(iris_dataset_2):
+    iris_dataset_2
+    return
 
 
 @app.cell
@@ -340,8 +343,8 @@ def _(mo):
 
 
 @app.cell
-def _(iris_with_errors_url, np, pd):
-    iris_dataset_4 = pd.read_csv(iris_with_errors_url, header=0)
+def _(iris_with_errors_url, np, read_csv_with_diagnostics):
+    iris_dataset_4 = read_csv_with_diagnostics(iris_with_errors_url)
     iris_dataset_4 = iris_dataset_4.replace("?", np.nan)
 
     print("Dimensão da base:", iris_dataset_4.shape)
@@ -403,8 +406,8 @@ def _(mo):
 
 
 @app.cell
-def _(iris_with_errors_url, np, pd):
-    iris_dataset_6 = pd.read_csv(iris_with_errors_url, header=0)
+def _(iris_with_errors_url, np, read_csv_with_diagnostics):
+    iris_dataset_6 = read_csv_with_diagnostics(iris_with_errors_url)
     iris_dataset_6 = iris_dataset_6.replace("?", np.nan)
 
     _columns = iris_dataset_6.columns[:-1]
@@ -429,12 +432,15 @@ def _(mo):
 
 
 @app.cell
-def _(iris_url, pd):
-    full_iris_dataset = pd.read_csv(iris_url, header=0)
-
-    print("Número de linhas e colunas:", full_iris_dataset.shape)
-    full_iris_dataset.head()
+def _(iris_url, read_csv_with_diagnostics):
+    full_iris_dataset = read_csv_with_diagnostics(iris_url)
     return (full_iris_dataset,)
+
+
+@app.cell
+def _(full_iris_dataset):
+    full_iris_dataset.head()
+    return
 
 
 @app.cell
@@ -607,8 +613,8 @@ def _(mo):
 
 
 @app.cell
-def _(iris_url, pd):
-    iris_dataset_8 = pd.read_csv(iris_url, header=0)
+def _(iris_url, read_csv_with_diagnostics):
+    iris_dataset_8 = read_csv_with_diagnostics(iris_url)
 
     print("Coluna original com as classes:")
     print(iris_dataset_8[iris_dataset_8.columns[-1]].head(10))
@@ -667,11 +673,15 @@ def _(mo):
 
 
 @app.cell
-def _(boston_housing_url, pd):
-    boston_housing = pd.read_csv(boston_housing_url, header=0)
-    print("Número de linhas e colunas:", boston_housing.shape)
-    boston_housing.head(10)
+def _(boston_housing_url, read_csv_with_diagnostics):
+    boston_housing = read_csv_with_diagnostics(boston_housing_url)
     return (boston_housing,)
+
+
+@app.cell
+def _(boston_housing):
+    boston_housing.head(10)
+    return
 
 
 @app.cell
@@ -715,11 +725,15 @@ def _(mo):
 
 
 @app.cell
-def _(pd, vehicle_url):
-    vehicle_dataset = pd.read_csv(vehicle_url, header=0)
-    print("Número de linhas e colunas:", vehicle_dataset.shape)
-    vehicle_dataset.head(10)
+def _(read_csv_with_diagnostics, vehicle_url):
+    vehicle_dataset = read_csv_with_diagnostics(vehicle_url)
     return (vehicle_dataset,)
+
+
+@app.cell
+def _(vehicle_dataset):
+    vehicle_dataset.head(10)
+    return
 
 
 @app.cell
@@ -774,6 +788,26 @@ def _(np, vehicle_dataset):
     print("Dados obtidos a partir da amostragem:")
     print(X_balanceado)
     return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Funções especializadas
+    """)
+    return
+
+
+@app.cell
+def _(pd):
+    def read_csv_with_diagnostics(url_or_path: str):
+        df = pd.read_csv(url_or_path, header=0)
+        n_row, n_col = df.shape
+        print(f"Númber of rows: {n_row} \nNumber of columns: {n_col}")
+
+        return df
+
+    return (read_csv_with_diagnostics,)
 
 
 if __name__ == "__main__":
