@@ -638,5 +638,123 @@ def _(dummies_df, pd):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Identificação de variáveis correlacionadas
+    """)
+    return
+
+
+@app.cell
+def _(pd):
+    boston_housing = pd.read_csv("data/BostonHousing.csv", header=0)
+    print("Número de linhas e colunas:", boston_housing.shape)
+    boston_housing.head(10)
+    return (boston_housing,)
+
+
+@app.cell
+def _(boston_housing, plt):
+    corr = boston_housing.corr(numeric_only=True)
+
+    plt.figure(figsize=(8, 8))
+    plt.imshow(corr, cmap="Blues", interpolation="none", aspect="auto")
+    plt.colorbar()
+    plt.xticks(range(len(corr)), corr.columns, rotation="vertical")
+    plt.yticks(range(len(corr)), corr.columns)
+    plt.title("Matriz de correlação entre variáveis", fontsize=14, fontweight="bold")
+    plt.grid(False)
+    plt.show()
+    return (corr,)
+
+
+@app.cell
+def _(corr):
+    p = 0.75
+    pares_correlacionados = []
+
+    # Percorre apenas metade da matriz para evitar repetir pares.
+    for _i, col_i in enumerate(corr.columns):
+        for j, col_j in enumerate(corr.columns):
+            if j > _i and abs(corr.loc[col_i, col_j]) > p:
+                pares_correlacionados.append((col_i, col_j, corr.loc[col_i, col_j]))
+
+    print(f"Pares com correlação absoluta maior que {p}:")
+    for col_i, col_j, valor in pares_correlacionados:
+        print(f"{col_i} -- {col_j}: correlação = {valor:.3f}")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Dados desbalanceados
+    """)
+    return
+
+
+@app.cell
+def _(pd):
+    vehicle_dataset = pd.read_csv("data/Vehicle.csv", header=0)
+    print("Número de linhas e colunas:", vehicle_dataset.shape)
+    vehicle_dataset.head(10)
+    return (vehicle_dataset,)
+
+
+@app.cell
+def _(vehicle_dataset):
+    vehicle_classes = vehicle_dataset[vehicle_dataset.columns[-1]]
+
+    print("Primeiros valores da coluna de classe:")
+    print(vehicle_classes.head())
+
+    print("\nNúmero de elementos por classe:")
+    print(vehicle_classes.value_counts())
+    return (vehicle_classes,)
+
+
+@app.cell
+def _(plt, vehicle_classes):
+    contagem_classes = vehicle_classes.value_counts().sort_index()
+
+    plt.figure(figsize=(7, 4))
+    plt.bar(contagem_classes.index, contagem_classes.values, alpha=0.75)
+    plt.title("Número de elementos em cada classe")
+    plt.xlabel("Classe")
+    plt.ylabel("Número de elementos")
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Subamostragem simples
+    """)
+    return
+
+
+@app.cell
+def _(np, vehicle_dataset):
+    N = 5
+
+    X = np.array(vehicle_dataset)
+    cls = np.array(vehicle_dataset[vehicle_dataset.columns[-1]])
+    classes_unicas = np.unique(cls)
+
+    amostras = []
+    for classe in classes_unicas:
+        indices_classe = np.argwhere(cls == classe).ravel()
+        indices_sorteados = np.random.choice(indices_classe, N, replace=False)
+        amostras.append(X[indices_sorteados, :])
+
+    X_balanceado = np.vstack(amostras)
+
+    print("Dados obtidos a partir da amostragem:")
+    print(X_balanceado)
+    return
+
+
 if __name__ == "__main__":
     app.run()
