@@ -576,5 +576,44 @@ def _(Binarizer, MinMaxScaler, full_iris_dataset_numeric_columns):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Lidando com variáveis categóricas
+
+    ## Codificação como inteiros
+    """)
+    return
+
+
+@app.cell
+def _(pd):
+    iris_dataset_8 = pd.read_csv("data/iris.csv", header=0)
+
+    print("Coluna original com as classes:")
+    print(iris_dataset_8[iris_dataset_8.columns[-1]].head(10))
+    return (iris_dataset_8,)
+
+
+@app.cell
+def _(iris_dataset_8, np):
+    classes = np.unique(iris_dataset_8[iris_dataset_8.columns[-1]])
+    class_mapping = {iris_class: number for number, iris_class in enumerate(classes)}
+    print("Mapeamento usado:", class_mapping)
+    return (class_mapping,)
+
+
+@app.cell
+def _(class_mapping, iris_dataset_8):
+    iris_dataset_8_codified = iris_dataset_8.copy()
+
+    iris_dataset_8_codified[iris_dataset_8.columns[-1]] = iris_dataset_8_codified[
+        iris_dataset_8.columns[-1]
+    ].map(class_mapping)
+
+    iris_dataset_8_codified
+    return
+
+
 if __name__ == "__main__":
     app.run()
