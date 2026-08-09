@@ -19,14 +19,28 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    # URLs dos datasets no GitHub
+    """)
+    return
+
+
+@app.cell
+def _():
+    iris_with_errors_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/iris-with-errors.csv"
+    return (iris_with_errors_url,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # Leitura de uma base de dados com problemas artificialmente introduzidos
     """)
     return
 
 
 @app.cell
-def _(pd):
-    iris_dataset = pd.read_csv("data/iris-with-errors.csv", header=0)
+def _(iris_with_errors_url, pd):
+    iris_dataset = pd.read_csv(iris_with_errors_url, header=0)
     n_row_iris, n_col_iris = iris_dataset.shape
     print(f"Númber of rows: {n_row_iris} \nNumber of columns: {n_col_iris}")
     return (iris_dataset,)
@@ -241,8 +255,8 @@ def _(mo):
 
 
 @app.cell
-def _(pd):
-    iris_dataset_2 = pd.read_csv("data/iris-with-errors.csv", header=0)
+def _(iris_with_errors_url, pd):
+    iris_dataset_2 = pd.read_csv(iris_with_errors_url, header=0)
     iris_dataset_2
     return (iris_dataset_2,)
 
@@ -320,8 +334,8 @@ def _(mo):
 
 
 @app.cell
-def _(np, pd):
-    iris_dataset_4 = pd.read_csv("data/iris-with-errors.csv", header=0)
+def _(iris_with_errors_url, np, pd):
+    iris_dataset_4 = pd.read_csv(iris_with_errors_url, header=0)
     iris_dataset_4 = iris_dataset_4.replace("?", np.nan)
 
     print("Dimensão da base:", iris_dataset_4.shape)
@@ -383,8 +397,8 @@ def _(mo):
 
 
 @app.cell
-def _(np, pd):
-    iris_dataset_6 = pd.read_csv("data/iris-with-errors.csv", header=0)
+def _(iris_with_errors_url, np, pd):
+    iris_dataset_6 = pd.read_csv(iris_with_errors_url, header=0)
     iris_dataset_6 = iris_dataset_6.replace("?", np.nan)
 
     _columns = iris_dataset_6.columns[:-1]
