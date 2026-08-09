@@ -29,7 +29,11 @@ def _():
     iris_with_errors_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/iris-with-errors.csv"
 
     iris_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/iris.csv"
-    return iris_url, iris_with_errors_url
+
+    vehicle_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/Vehicle.csv"
+
+    boston_housing_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/BostonHousing.csv"
+    return boston_housing_url, iris_url, iris_with_errors_url, vehicle_url
 
 
 @app.cell(hide_code=True)
@@ -663,8 +667,8 @@ def _(mo):
 
 
 @app.cell
-def _(pd):
-    boston_housing = pd.read_csv("data/BostonHousing.csv", header=0)
+def _(boston_housing_url, pd):
+    boston_housing = pd.read_csv(boston_housing_url, header=0)
     print("Número de linhas e colunas:", boston_housing.shape)
     boston_housing.head(10)
     return (boston_housing,)
@@ -711,8 +715,8 @@ def _(mo):
 
 
 @app.cell
-def _(pd):
-    vehicle_dataset = pd.read_csv("data/Vehicle.csv", header=0)
+def _(pd, vehicle_url):
+    vehicle_dataset = pd.read_csv(vehicle_url, header=0)
     print("Número de linhas e colunas:", vehicle_dataset.shape)
     vehicle_dataset.head(10)
     return (vehicle_dataset,)
