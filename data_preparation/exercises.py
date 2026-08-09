@@ -27,7 +27,9 @@ def _(mo):
 @app.cell
 def _():
     iris_with_errors_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/iris-with-errors.csv"
-    return (iris_with_errors_url,)
+
+    iris_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/iris.csv"
+    return iris_url, iris_with_errors_url
 
 
 @app.cell(hide_code=True)
@@ -423,8 +425,8 @@ def _(mo):
 
 
 @app.cell
-def _(pd):
-    full_iris_dataset = pd.read_csv("data/iris.csv", header=0)
+def _(iris_url, pd):
+    full_iris_dataset = pd.read_csv(iris_url, header=0)
 
     print("Número de linhas e colunas:", full_iris_dataset.shape)
     full_iris_dataset.head()
@@ -601,8 +603,8 @@ def _(mo):
 
 
 @app.cell
-def _(pd):
-    iris_dataset_8 = pd.read_csv("data/iris.csv", header=0)
+def _(iris_url, pd):
+    iris_dataset_8 = pd.read_csv(iris_url, header=0)
 
     print("Coluna original com as classes:")
     print(iris_dataset_8[iris_dataset_8.columns[-1]].head(10))
