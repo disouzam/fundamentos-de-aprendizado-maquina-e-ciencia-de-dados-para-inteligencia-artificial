@@ -615,5 +615,28 @@ def _(class_mapping, iris_dataset_8):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## One-hot enconding
+    """)
+    return
+
+
+@app.cell
+def _(pd):
+    dummies_df = pd.DataFrame({"categoria": ["a", "b", "a", "c", "a", "b"]})
+
+    dummies_df
+    return (dummies_df,)
+
+
+@app.cell
+def _(dummies_df, pd):
+    dummies_df_onehot = pd.get_dummies(dummies_df, drop_first=True)
+    dummies_df_onehot
+    return
+
+
 if __name__ == "__main__":
     app.run()
