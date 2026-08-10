@@ -78,14 +78,9 @@ def _(mo):
 
 
 @app.cell
-def _(iris_dataset, mo):
-    iris_cols = list(iris_dataset.columns)
-
-    _md_text = ""
-    for _col in iris_cols:
-        _md_text += f"\n1. {_col}"
-
-    mo.md(f"As colunas que existem no iris_dataset são: {_md_text}")
+def _(get_markdown_about_df_columns, iris_dataset, mo):
+    _md_text = get_markdown_about_df_columns(iris_dataset)
+    mo.md(_md_text)
     return
 
 
@@ -98,15 +93,9 @@ def _(mo):
 
 
 @app.cell
-def _(iris_dataset, mo):
-    iris_data_types = iris_dataset.dtypes
-
-    _md_text = ""
-
-    for col_name, col_type in iris_data_types.items():
-        _md_text += f"\n1. **{col_name}**: {col_type}"
-
-    mo.md(f"Os tipos de dados de cada coluna estão listados abaixo: {_md_text}")
+def _(get_markdown_about_df_datatypes, iris_dataset, mo):
+    _md_text = get_markdown_about_df_datatypes(iris_dataset)
+    mo.md(_md_text)
     return
 
 
@@ -119,24 +108,8 @@ def _(mo):
 
 
 @app.cell
-def _(iris_dataset, mo):
-    absent_data_values = iris_dataset.isna().sum()
-
-    _md_text = ""
-
-    columns_with_no_absent_values = []
-    for _col_name, number_of_absent_values in absent_data_values.items():
-        if number_of_absent_values == 0:
-            columns_with_no_absent_values.append(_col_name)
-        else:
-            _md_text += f"\n1. **{_col_name}**: {number_of_absent_values}"
-
-    _md_text = f"O número de valores ausentes por coluna são: {_md_text}"
-
-    _md_text += "\n\nAs colunas abaixo não possuem valores ausentes: "
-    for _col_name in columns_with_no_absent_values:
-        _md_text += f"\n1. **{_col_name}**"
-
+def _(get_markdown_about_absent_values, iris_dataset, mo):
+    _md_text = get_markdown_about_absent_values(iris_dataset)
     mo.md(_md_text)
     return
 
@@ -808,6 +781,62 @@ def _(pd):
         return df
 
     return (read_csv_with_diagnostics,)
+
+
+@app.cell
+def _(pd):
+    def get_markdown_about_df_columns(df: pd.DataFrame):
+        cols = list(df.columns)
+
+        md_text = ""
+        for col in cols:
+            md_text += f"\n1. **{col}**"
+
+        md_text = f"As colunas que existem no dataset são: {md_text}"
+        return md_text
+
+    return (get_markdown_about_df_columns,)
+
+
+@app.cell
+def _(pd):
+    def get_markdown_about_df_datatypes(df: pd.DataFrame):
+        data_types = df.dtypes
+
+        md_text = ""
+
+        for col_name, col_type in data_types.items():
+            md_text += f"\n1. **{col_name}**: {col_type}"
+
+        md_text = f"Os tipos de dados de cada coluna estão listados abaixo: {md_text}"
+        return md_text
+
+    return (get_markdown_about_df_datatypes,)
+
+
+@app.cell
+def _(pd):
+    def get_markdown_about_absent_values(df: pd.DataFrame):
+        absent_data_values = df.isna().sum()
+
+        md_text = ""
+
+        columns_with_no_absent_values = []
+        for col_name, number_of_absent_values in absent_data_values.items():
+            if number_of_absent_values == 0:
+                columns_with_no_absent_values.append(col_name)
+            else:
+                md_text += f"\n1. **{col_name}**: {number_of_absent_values}"
+
+        md_text = f"O número de valores ausentes por coluna são: {md_text}"
+
+        md_text += "\n\nAs colunas abaixo não possuem valores ausentes: "
+        for col_name in columns_with_no_absent_values:
+            md_text += f"\n1. **{col_name}**"
+
+        return md_text
+
+    return (get_markdown_about_absent_values,)
 
 
 if __name__ == "__main__":
