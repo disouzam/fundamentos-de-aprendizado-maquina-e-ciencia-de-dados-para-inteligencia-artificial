@@ -123,30 +123,10 @@ def _(mo):
 
 
 @app.cell
-def _(iris_dataset, mo):
-    cleaned_iris_dataset = iris_dataset.dropna()
-
-    original_shape = iris_dataset.shape
-    cleaned_shape = cleaned_iris_dataset.shape
-
-    _md_text = ""
-    _row_change = original_shape[0] - cleaned_shape[0]
-    _col_change = original_shape[1] - cleaned_shape[1]
-
-    if _row_change == 0:
-        _md_text += "\nNão houve alteração no número de linhas do dataset iris.\n"
-    else:
-        _percent_reduction = (_row_change) / original_shape[0] * 100
-        _md_text += f"\nHouve uma redução de **{_percent_reduction:.2f}%** no número de linhas com a eliminação de **{_row_change}** linhas com valores ausentes.\n"
-
-    if _col_change == 0:
-        _md_text += "\n**Não houve alteração no número de colunas** do dataset iris.\n"
-    else:
-        _percent_reduction = (_col_change) / original_shape[1] * 100
-        _md_text += f"\nHouve uma redução de **{_percent_reduction:.2f}%** no número de colunas com a eliminação de **{_col_change} ** colunas com valores ausentes.\n"
-
+def _(dropna_with_diagnostics, iris_dataset, mo):
+    cleaned_iris_dataset, _md_text = dropna_with_diagnostics(iris_dataset)
     mo.md(_md_text)
-    return cleaned_iris_dataset, cleaned_shape
+    return (cleaned_iris_dataset,)
 
 
 @app.cell
@@ -179,27 +159,10 @@ def _(cleaned_iris_dataset, duplicated_rows_mask):
 
 
 @app.cell
-def _(cleaned_iris_dataset, cleaned_shape, mo):
-    _md_text = ""
-    no_duplicates_iris_dataset = cleaned_iris_dataset.drop_duplicates()
-
-    no_duplicates_shape = no_duplicates_iris_dataset.shape
-
-    _row_change = cleaned_shape[0] - no_duplicates_shape[0]
-    _col_change = cleaned_shape[1] - no_duplicates_shape[1]
-
-    if _row_change == 0:
-        _md_text += "\nNão houve alteração no número de linhas do dataset iris.\n"
-    else:
-        _percent_reduction = (_row_change) / cleaned_shape[0] * 100
-        _md_text += f"\nHouve uma redução de **{_percent_reduction:.2f}%** no número de linhas com a eliminação de **{_row_change}** linhas duplicadas.\n"
-
-    if _col_change == 0:
-        _md_text += "\n**Não houve alteração no número de colunas** do dataset iris.\n"
-    else:
-        _percent_reduction = (_col_change) / cleaned_shape[1] * 100
-        _md_text += f"\nHouve uma redução de **{_percent_reduction:.2f}%** no número de colunas com a eliminação de **{_col_change} ** colunas duplicadas.\n"
-
+def _(cleaned_iris_dataset, drop_duplicates_with_diagnostics, mo):
+    no_duplicates_iris_dataset, _md_text = drop_duplicates_with_diagnostics(
+        cleaned_iris_dataset
+    )
     mo.md(_md_text)
     return
 
@@ -837,6 +800,66 @@ def _(pd):
         return md_text
 
     return (get_markdown_about_absent_values,)
+
+
+@app.cell
+def _(pd):
+    def dropna_with_diagnostics(df: pd.DataFrame):
+        cleaned_dataset = df.dropna()
+
+        original_shape = df.shape
+        cleaned_shape = cleaned_dataset.shape
+
+        md_text = ""
+        row_change = original_shape[0] - cleaned_shape[0]
+        col_change = original_shape[1] - cleaned_shape[1]
+
+        if row_change == 0:
+            md_text += "\nNão houve alteração no número de linhas do dataset.\n"
+        else:
+            percent_reduction = (row_change) / original_shape[0] * 100
+            md_text += f"\nHouve uma redução de **{percent_reduction:.2f}%** no número de linhas com a eliminação de **{row_change}** linhas com valores ausentes.\n"
+
+        if col_change == 0:
+            md_text += "\n**Não houve alteração no número de colunas** do dataset.\n"
+        else:
+            percent_reduction = (col_change) / original_shape[1] * 100
+            md_text += f"\nHouve uma redução de **{percent_reduction:.2f}%** no número de colunas com a eliminação de **{col_change} ** colunas com valores ausentes.\n"
+
+        return cleaned_dataset, md_text
+
+    return (dropna_with_diagnostics,)
+
+
+@app.cell
+def _(pd):
+    def drop_duplicates_with_diagnostics(df: pd.DataFrame):
+        md_text = ""
+        cleaned_shape = df.shape
+        no_duplicates_dataset = df.drop_duplicates()
+
+        no_duplicates_shape = no_duplicates_dataset.shape
+
+        row_change = cleaned_shape[0] - no_duplicates_shape[0]
+        col_change = cleaned_shape[1] - no_duplicates_shape[1]
+
+        if row_change == 0:
+            md_text += "\nNão houve alteração no número de linhas do dataset iris.\n"
+        else:
+            percent_reduction = (row_change) / cleaned_shape[0] * 100
+            md_text += f"\nHouve uma redução de **{percent_reduction:.2f}%** no número de linhas com a eliminação de **{row_change}** linhas duplicadas.\n"
+
+        if col_change == 0:
+            md_text += (
+                "\n**Não houve alteração no número de colunas** do dataset iris.\n"
+            )
+        else:
+            percent_reduction = (col_change) / cleaned_shape[1] * 100
+            md_text += f"\nHouve uma redução de **{percent_reduction:.2f}%** no número de colunas com a eliminação de **{col_change} ** colunas duplicadas.\n"
+
+        return no_duplicates_dataset, md_text
+
+    return (drop_duplicates_with_diagnostics,)
 
 
 if __name__ == "__main__":
