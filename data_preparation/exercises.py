@@ -26,13 +26,13 @@ def _(mo):
 
 @app.cell
 def _():
-    iris_with_errors_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/iris-with-errors.csv"
+    iris_with_errors_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/main/data-versioned/iris-with-errors.csv"
 
-    iris_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/iris.csv"
+    iris_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/main/data-versioned/iris.csv"
 
-    vehicle_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/Vehicle.csv"
+    vehicle_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/main/data-versioned/Vehicle.csv"
 
-    boston_housing_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/data-preparation-exercises/data-versioned/BostonHousing.csv"
+    boston_housing_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/main/data-versioned/BostonHousing.csv"
     return boston_housing_url, iris_url, iris_with_errors_url, vehicle_url
 
 
