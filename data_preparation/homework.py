@@ -398,6 +398,48 @@ def _(
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    # 5. Reamostre a base Iris selecionando 10 elementos de cada classe.
+    """)
+    return
+
+
+@app.cell
+def _(iris_dataset, iris_dataset_array, np):
+    resampling_size = 10
+    iris_classes = np.array(iris_dataset[iris_dataset.columns[-1]])
+    unique_iris_classes = np.unique(iris_classes)
+
+    samples = []
+
+    for cls in unique_iris_classes:
+        indices_classe = np.argwhere(iris_classes == cls).ravel()
+        indices_sorteados = np.random.choice(
+            indices_classe, resampling_size, replace=False
+        )
+        samples.append(iris_dataset_array[indices_sorteados, :])
+    return (samples,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Subamostragem
+    """)
+    return
+
+
+@app.cell
+def _(np, samples):
+    iris_balanced = np.vstack(samples)
+
+    print("Dados obtidos a partir da amostragem:")
+    print(iris_balanced)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # Funções especializadas
     """)
     return
