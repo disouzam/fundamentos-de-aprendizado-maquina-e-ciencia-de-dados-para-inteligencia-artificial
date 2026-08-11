@@ -286,18 +286,19 @@ def _(iris_dataset, iris_dataset_array, iris_dataset_array_norm, plt):
     coluna = 0
     nome_coluna = iris_dataset.columns[coluna]
 
-    plt.figure(figsize=(6, 3))
-    plt.hist(iris_dataset_array[:, coluna], bins=15, alpha=0.8, density=True)
-    plt.title(f"Dados originais — {nome_coluna}")
-    plt.xlabel(nome_coluna)
-    plt.ylabel("Frequência")
-    plt.show()
+    fig, axes = plt.subplots(1, 2, figsize=(12, 3))
 
-    plt.figure(figsize=(6, 3))
-    plt.hist(iris_dataset_array_norm[:, coluna], bins=15, alpha=0.8, density=True)
-    plt.title(f"Dados normalizados — {nome_coluna}")
-    plt.xlabel(nome_coluna)
-    plt.ylabel("Frequência")
+    axes[0].hist(iris_dataset_array[:, coluna], bins=15, alpha=0.8, density=True)
+    axes[0].set_title(f"Dados originais — {nome_coluna}")
+    axes[0].set_xlabel(nome_coluna)
+    axes[0].set_ylabel("Frequência")
+
+    axes[1].hist(iris_dataset_array_norm[:, coluna], bins=15, alpha=0.8, density=True)
+    axes[1].set_title(f"Dados normalizados — {nome_coluna}")
+    axes[1].set_xlabel(nome_coluna)
+    axes[1].set_ylabel("Frequência")
+
+    plt.tight_layout()
     plt.show()
     return
 
