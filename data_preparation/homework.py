@@ -9,8 +9,10 @@ def _():
     import marimo as mo
     import pandas as pd
     import numpy as np
+    from sklearn.preprocessing import MinMaxScaler
+    import matplotlib.pyplot as plt
 
-    return mo, np, pd
+    return MinMaxScaler, mo, np, pd, plt
 
 
 @app.cell(hide_code=True)
@@ -24,13 +26,15 @@ def _(mo):
 @app.cell
 def _():
     iris_with_errors_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/main/data-versioned/iris-with-errors.csv"
-    return (iris_with_errors_url,)
+
+    iris_url = r"https://raw.githubusercontent.com/disouzam/fundamentos-de-aprendizado-maquina-e-ciencia-de-dados-para-inteligencia-artificial/refs/heads/main/data-versioned/iris.csv"
+    return iris_url, iris_with_errors_url
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 1. Leia novamente a base `iris-with-errors.csv`, faça a limpeza dos dados e remova as duas últimas colunas.
+    # 1. Leia novamente a base `iris-with-errors.csv`, faça a limpeza dos dados e remova as duas últimas colunas.
     """)
     return
 
@@ -124,6 +128,177 @@ def _(
 @app.cell
 def _(iris_dataset_after_dropping_duplicates_after_column_removal):
     iris_dataset_after_dropping_duplicates_after_column_removal
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # 2. Leia novamente a base `iris-with-errors.csv` e substitua os valores ausentes pela **mediana** de cada atributo.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Leitura do dataset
+    """)
+    return
+
+
+@app.cell
+def _(iris_with_errors_url, read_csv_with_diagnostics):
+    iris_dataset_with_errors2 = read_csv_with_diagnostics(iris_with_errors_url)
+    return (iris_dataset_with_errors2,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Substituição dos '?' por nan
+    """)
+    return
+
+
+@app.cell
+def _(iris_dataset_with_errors2, np):
+    iris_dataset_with_errors2_mod1 = iris_dataset_with_errors2.replace("?", np.nan)
+    return (iris_dataset_with_errors2_mod1,)
+
+
+@app.cell
+def _(iris_dataset_with_errors2_mod1):
+    iris_dataset_with_errors2_mod1.head(5)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Cálculo das medianas
+    """)
+    return
+
+
+@app.cell
+def _(iris_dataset_with_errors2_mod1):
+    columns = iris_dataset_with_errors2_mod1.columns[:-1]
+    iris_dataset_with_errors2_mod1[columns] = iris_dataset_with_errors2_mod1[
+        columns
+    ].astype(float)
+
+    iris_dataset_with_errors2_median = iris_dataset_with_errors2_mod1[columns].median()
+    iris_dataset_with_errors2_median
+    return columns, iris_dataset_with_errors2_median
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Preenchimento / inputação de dados
+    """)
+    return
+
+
+@app.cell
+def _(
+    columns,
+    iris_dataset_with_errors2_median,
+    iris_dataset_with_errors2_mod1,
+):
+    iris_dataset_with_errors2_mod2 = iris_dataset_with_errors2_mod1.copy()
+    iris_dataset_with_errors2_mod2[columns] = iris_dataset_with_errors2_mod2[
+        columns
+    ].fillna(iris_dataset_with_errors2_median)
+    return (iris_dataset_with_errors2_mod2,)
+
+
+@app.cell
+def _(iris_dataset_with_errors2_mod2):
+    iris_dataset_with_errors2_mod2
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # 3. Considere a base `iris.csv`. Mostre o histograma de cada variável antes e depois da normalização.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Leitura do dataset
+    """)
+    return
+
+
+@app.cell
+def _(iris_url, read_csv_with_diagnostics):
+    iris_dataset = read_csv_with_diagnostics(iris_url)
+    return (iris_dataset,)
+
+
+@app.cell
+def _(iris_dataset):
+    iris_dataset.head()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Normalização do dataset
+    """)
+    return
+
+
+@app.cell
+def _(iris_dataset, np):
+    columns_iris = list(iris_dataset.columns)  # noqa: F841
+
+    iris_dataset_array = np.array(iris_dataset[iris_dataset.columns[:-1]], dtype=float)
+    iris_dataset_array.shape
+    return (iris_dataset_array,)
+
+
+@app.cell
+def _(MinMaxScaler, iris_dataset_array):
+    scaler_minmax = MinMaxScaler(feature_range=(0, 1))
+    iris_dataset_array_norm = scaler_minmax.fit_transform(iris_dataset_array)
+    iris_dataset_array_norm.shape
+    return (iris_dataset_array_norm,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Geração dos histogramas
+    """)
+    return
+
+
+@app.cell
+def _(iris_dataset, iris_dataset_array, iris_dataset_array_norm, plt):
+    coluna = 0
+    nome_coluna = iris_dataset.columns[coluna]
+
+    plt.figure(figsize=(6, 3))
+    plt.hist(iris_dataset_array[:, coluna], bins=15, alpha=0.8, density=True)
+    plt.title(f"Dados originais — {nome_coluna}")
+    plt.xlabel(nome_coluna)
+    plt.ylabel("Frequência")
+    plt.show()
+
+    plt.figure(figsize=(6, 3))
+    plt.hist(iris_dataset_array_norm[:, coluna], bins=15, alpha=0.8, density=True)
+    plt.title(f"Dados normalizados — {nome_coluna}")
+    plt.xlabel(nome_coluna)
+    plt.ylabel("Frequência")
+    plt.show()
     return
 
 
