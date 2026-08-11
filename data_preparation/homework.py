@@ -9,10 +9,10 @@ def _():
     import marimo as mo
     import pandas as pd
     import numpy as np
-    from sklearn.preprocessing import MinMaxScaler
+    from sklearn.preprocessing import MinMaxScaler, StandardScaler
     import matplotlib.pyplot as plt
 
-    return MinMaxScaler, mo, np, pd, plt
+    return MinMaxScaler, StandardScaler, mo, np, pd, plt
 
 
 @app.cell(hide_code=True)
@@ -313,6 +313,82 @@ def _(columns_iris, iris_dataset_array, iris_dataset_array_norm, np, plt):
         axes[1].set_title(f"Dados normalizados — {nome_coluna}")
         axes[1].set_xlabel(nome_coluna)
         axes[1].set_ylabel("Frequência")
+
+        plt.tight_layout()
+        plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # 4. Considere a base `iris.csv`. Mostre o histograma de cada variável antes e depois da padronização.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Padronização
+    """)
+    return
+
+
+@app.cell
+def _(StandardScaler, iris_dataset_array):
+    scaler_standard = StandardScaler()
+    iris_dataset_array_standardized = scaler_standard.fit_transform(iris_dataset_array)
+    iris_dataset_array_standardized.shape
+    return (iris_dataset_array_standardized,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### Geração dos histogramas
+    """)
+    return
+
+
+@app.cell
+def _(
+    columns_iris,
+    iris_dataset_array,
+    iris_dataset_array_standardized,
+    np,
+    plt,
+):
+    for idx_col_2, column2 in enumerate(columns_iris):
+        nome_coluna_2 = columns_iris[idx_col_2]
+
+        fig2, axes2 = plt.subplots(1, 2, figsize=(12, 3))
+
+        cor_coluna2 = np.random.rand(
+            3,
+        )
+
+        axes2[0].hist(
+            iris_dataset_array[:, idx_col_2],
+            bins=15,
+            alpha=0.8,
+            density=True,
+            color=cor_coluna2,
+        )
+        axes2[0].set_title(f"Dados originais — {nome_coluna_2}")
+        axes2[0].set_xlabel(nome_coluna_2)
+        axes2[0].set_ylabel("Frequência")
+
+        axes2[1].hist(
+            iris_dataset_array_standardized[:, idx_col_2],
+            bins=15,
+            alpha=0.8,
+            density=True,
+            color=cor_coluna2,
+        )
+        axes2[1].set_title(f"Dados padronizados — {nome_coluna_2}")
+        axes2[1].set_xlabel(nome_coluna_2)
+        axes2[1].set_ylabel("Frequência")
 
         plt.tight_layout()
         plt.show()
