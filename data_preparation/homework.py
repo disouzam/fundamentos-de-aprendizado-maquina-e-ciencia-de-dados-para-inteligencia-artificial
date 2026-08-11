@@ -258,11 +258,11 @@ def _(mo):
 
 @app.cell
 def _(iris_dataset, np):
-    columns_iris = list(iris_dataset.columns)  # noqa: F841
+    columns_iris = list(iris_dataset.columns)[:-1]
 
-    iris_dataset_array = np.array(iris_dataset[iris_dataset.columns[:-1]], dtype=float)
+    iris_dataset_array = np.array(iris_dataset[columns_iris], dtype=float)
     iris_dataset_array.shape
-    return (iris_dataset_array,)
+    return columns_iris, iris_dataset_array
 
 
 @app.cell
@@ -282,24 +282,40 @@ def _(mo):
 
 
 @app.cell
-def _(iris_dataset, iris_dataset_array, iris_dataset_array_norm, plt):
-    coluna = 0
-    nome_coluna = iris_dataset.columns[coluna]
+def _(columns_iris, iris_dataset_array, iris_dataset_array_norm, np, plt):
+    for idx_col, column in enumerate(columns_iris):
+        nome_coluna = columns_iris[idx_col]
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 3))
+        fig, axes = plt.subplots(1, 2, figsize=(12, 3))
 
-    axes[0].hist(iris_dataset_array[:, coluna], bins=15, alpha=0.8, density=True)
-    axes[0].set_title(f"Dados originais — {nome_coluna}")
-    axes[0].set_xlabel(nome_coluna)
-    axes[0].set_ylabel("Frequência")
+        cor_coluna = np.random.rand(
+            3,
+        )
 
-    axes[1].hist(iris_dataset_array_norm[:, coluna], bins=15, alpha=0.8, density=True)
-    axes[1].set_title(f"Dados normalizados — {nome_coluna}")
-    axes[1].set_xlabel(nome_coluna)
-    axes[1].set_ylabel("Frequência")
+        axes[0].hist(
+            iris_dataset_array[:, idx_col],
+            bins=15,
+            alpha=0.8,
+            density=True,
+            color=cor_coluna,
+        )
+        axes[0].set_title(f"Dados originais — {nome_coluna}")
+        axes[0].set_xlabel(nome_coluna)
+        axes[0].set_ylabel("Frequência")
 
-    plt.tight_layout()
-    plt.show()
+        axes[1].hist(
+            iris_dataset_array_norm[:, idx_col],
+            bins=15,
+            alpha=0.8,
+            density=True,
+            color=cor_coluna,
+        )
+        axes[1].set_title(f"Dados normalizados — {nome_coluna}")
+        axes[1].set_xlabel(nome_coluna)
+        axes[1].set_ylabel("Frequência")
+
+        plt.tight_layout()
+        plt.show()
     return
 
 
