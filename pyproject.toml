@@ -19,4 +19,5 @@ exclude-newer = "30 days"
 [dependency-groups]
 dev = [
     "prek>=0.4.8",
+    "ty>=0.0.60",
 ]
