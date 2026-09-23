@@ -223,7 +223,7 @@ def _(np, plt):
     sns.heatmap(array, annot=True, fmt=".2f", cmap="viridis", ax=ax_heatmap)
     ax_heatmap.set_title("Exemplo de mapa de calor")
     plt.show()
-    return
+    return (sns,)
 
 
 @app.cell(hide_code=True)
@@ -434,6 +434,139 @@ def _(np, numbers_list6, plt):
     boxplots[1].set_xticklabels([f"n={len(large_list)}"])
     boxplots[1].set_title("Exemplo de boxplot para uma lista grande")
 
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Exemplos usando a base dados Iris
+    """)
+    return
+
+
+@app.cell
+def _():
+    from sklearn.datasets import load_iris
+
+    iris_source = load_iris(as_frame=True)
+    iris_df = iris_source.frame.copy()
+
+    iris_df["species"] = iris_df["target"].map(
+        dict(enumerate(iris_source.target_names))
+    )
+    iris_df = iris_df.drop(columns="target")
+
+    iris_df = iris_df.rename(
+        columns={
+            "sepal length (cm)": "sepal_length",
+            "sepal width (cm)": "sepal_width",
+            "petal length (cm)": "petal_length",
+            "petal width (cm)": "petal_width",
+        }
+    )
+
+    iris_df.head()
+    return (iris_df,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Boxplot por espécie de flor
+    """)
+    return
+
+
+@app.cell
+def _(iris_df, plt, sns):
+    _, ax_boxplots_per_species = plt.subplots(2, 2, figsize=(10, 6), sharey="all")
+
+    sns.boxplot(
+        data=iris_df, x="species", y="petal_length", ax=ax_boxplots_per_species[0][0]
+    )
+    sns.boxplot(
+        data=iris_df, x="species", y="petal_width", ax=ax_boxplots_per_species[0][1]
+    )
+    sns.boxplot(
+        data=iris_df, x="species", y="sepal_length", ax=ax_boxplots_per_species[1][0]
+    )
+    sns.boxplot(
+        data=iris_df, x="species", y="sepal_width", ax=ax_boxplots_per_species[1][1]
+    )
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Plots em formato de violino
+    """)
+    return
+
+
+@app.cell
+def _(iris_df, plt, sns):
+    _, ax_violinplots_per_species = plt.subplots(2, 2, figsize=(10, 6), sharey="all")
+
+    sns.violinplot(
+        data=iris_df, x="species", y="petal_length", ax=ax_violinplots_per_species[0][0]
+    )
+    sns.violinplot(
+        data=iris_df, x="species", y="petal_width", ax=ax_violinplots_per_species[0][1]
+    )
+    sns.violinplot(
+        data=iris_df, x="species", y="sepal_length", ax=ax_violinplots_per_species[1][0]
+    )
+    sns.violinplot(
+        data=iris_df, x="species", y="sepal_width", ax=ax_violinplots_per_species[1][1]
+    )
+    plt.show()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Gráfico de "enxame"
+    """)
+    return
+
+
+@app.cell
+def _(iris_df, plt, sns):
+    _, ax_swarmplots_per_species = plt.subplots(2, 2, figsize=(10, 6), sharey="all")
+
+    sns.swarmplot(
+        data=iris_df,
+        x="species",
+        y="petal_length",
+        ax=ax_swarmplots_per_species[0][0],
+        size=2,
+    )
+    sns.swarmplot(
+        data=iris_df,
+        x="species",
+        y="petal_width",
+        ax=ax_swarmplots_per_species[0][1],
+        size=2,
+    )
+    sns.swarmplot(
+        data=iris_df,
+        x="species",
+        y="sepal_length",
+        ax=ax_swarmplots_per_species[1][0],
+        size=2,
+    )
+    sns.swarmplot(
+        data=iris_df,
+        x="species",
+        y="sepal_width",
+        ax=ax_swarmplots_per_species[1][1],
+        size=2,
+    )
     plt.show()
     return
 
