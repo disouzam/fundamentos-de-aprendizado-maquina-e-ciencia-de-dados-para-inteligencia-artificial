@@ -5,6 +5,7 @@ description = "Atividades do curso de Aprendizado de Máquina e Ciência de Dado
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "ipykernel>=7.3.0",
     "marimo>=0.23.13",
     "matplotlib>=3.11.0",
     "matplotlib-venn>=1.1.2",
@@ -12,6 +13,7 @@ dependencies = [
     "plotly>=6.9.0",
     "ruff>=0.15.20",
     "scikit-learn>=1.9.0",
+    "seaborn>=0.13.2",
 ]
 
 [tool.uv]
